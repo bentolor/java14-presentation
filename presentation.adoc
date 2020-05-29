@@ -1,5 +1,5 @@
 = Records, Switch, …: What's new in Java 14?
-:author: Benjamin Schmid @bentolor <benjamin.schmid@exxcellent.de>
+:author: Benjamin Schmid @bentolor <bentolor @ gmail.com>
 :date: 2019-07-04
 :icons: font
 // we want local served fonts. Therefore patched sky.css
