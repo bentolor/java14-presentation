@@ -1,0 +1,334 @@
+[.lightbg,background-video="videos/woman-study.mp4",background-video-loop="true",background-opacity="0.7"]
+== Language
+
+
+[transition="fade-out"]
+=== `switch` in Java 8
+
+[source,java]
+----
+    enum Direction {N, S, W, E}
+
+    String switchExpressionJDK8(Direction way) {
+        String result;
+        switch (way) {
+            case N:
+                result = "Up";
+                break;
+            case S:
+                result = "Down";
+                break;
+            case E:
+            case W:
+                result = "Somewhere left or right";
+                break;
+            default:
+                throw new IllegalStateException("Huh?: " + way);
+        }
+        return result;
+    }
+----
+[.notes]
+--
+* Error-prone
+** forget `break`
+** must have a `default`
+* Clumsy: Temporary assign a variable
+--
+
+[transition="fade-in"]
+=== Switch-Expression  [version]#14# [stable]#stable#
+Motivation: Prerequisite for `instanceof` pattern matching
+[source,java]
+----
+String switchExpressionJdk14(Direction way) {
+    return switch (way) {                         <1>
+        case N -> "Up";                           <2>
+        case S -> { yield "Down"; }               <3>
+        case E, W -> "Somewhere left or right";
+        // default -> "Foo"                       <4>
+    };
+}
+----
+
+<1> `switch` can be used as expression
+<2> Arrow form `->` instead of `:` → no fallthrough / no `break;` necessary!
+<3> Lambdas can be used to. For _expressions_ they must `yield` a value
+<4> `default` can be ommitted if a) no expression or b) `enum` with every value handled
+
+
+
+[.notes]
+--
+* Preview kommt durchaus zum Einsatz:  Switch-Expression wurde mit Java 12 eingeführt und in Java 13 verändert.
+
+* `switch` can be used as expression
+* `->` instead of `:` → no `break;` necessary!
+* Lambdas can be used to. For _expressions_ they must `yield` a value [version]#13#
++ `default` can be ommitted if a) no expression or b) `enum` with every value handled
+--
+
+
+=== Preview features [preview]#Preview#
+
+[.col2]
+--
+[source,text]
+.Unlock Compilation
+----
+$ javac --release xx --enable-preview
+----
+--
+
+[.col2]
+--
+[source,text]
+.Unlock Execution
+----
+$ java --enable-preview …
+----
+--
+
+[.clear]
+--
+{sp} +
+[decent]#`xx` must _exactly_ match used JDK version#
+
+--
+
+[.notes]
+--
+* New in Java 12
+* Allow to preview/use features.
+* Forces awareness by using toggle switch on _compiling and running_
+--
+
+
+=== Text Blocks [preview]#Preview#
+
+[.col2]
+--
+.Java 8
+[source,java]
+----
+Object obj = engine.eval(
+    "function hello() {\n" +
+    "   print(\"Hi, world!\");\n" +
+    "}\n" +
+    "   \n"  +
+    "hello() "+
+    ";"
+    );
+----
+--
+
+[.col2]
+--
+.Java 14
+[source,java]
+----
+Object obj = engine.eval("""
+    function hello() {
+       print("Hi, world!");
+    }
+      \s
+    hello() \
+    ;\
+    """);
+----
+--
+
+[.x-small.decent]
+--
+* **Leading whitespaces** identation **removed** up to the most-left character in the block including the closing `"""`
+* All **trailing whitespaces removed**, line-endings **normalized to `\n`**
+* **Escape sequences:** `\s` fences whitespace trimming, `\` at line end avoids `\n` insertion
+--
+
+[.notes]
+--
+--
+
+
+=== `instanceof` Pattern Matching [preview]#Preview#
+
+[.col2]
+--
+.Common Java idiom:
+[source,java]
+----
+if (obj instanceof String) {
+    String s = (String) obj;
+    s.toLowerCase();
+} else {
+    // …
+}
+----
+--
+[.col2]
+--
+.Using v14+ pattern matching:
+[source,java]
+----
+if (obj instanceof String s) {
+    s.toLowerCase();
+
+} else {
+    // can't use s here
+}
+----
+--
+_Binding variable_ `s` only available in scopes, where _pattern matches_ (!)
+
+
+
+=== Pattern Matching: Scoping [preview]#Preview#
+
+[source.fragments,java,subs="none"]
+----
+String <mark>s</mark> = "123"; 
+@Test void bindingVarScoping() {
+    var obj = Math.random() < 0.5 ? "Oh Magic!" : 9;
+    
+    if (!(obj instanceof String s)) 
+      assertEquals("123", <mark>s</mark>);
+    else 
+      assertEquals("Oh Magic!", s);
+    
+    if (obj instanceof String s && s.length() > 5) 
+        assertEquals("Oh Magic!", <mark>s</mark>);
+    else 
+        assertEquals("123", s);
+    
+    if (obj instanceof String s || <mark>s</mark>.length() < 5) 
+        assertEquals("123", <mark>s</mark>);
+    else 
+        assertEquals("123", <mark>s</mark>);
+}
+
+----
+
+[.lightbg,background-video="videos/record.mp4",background-video-loop="true",background-opacity="0.7"]
+=== Records [preview]#Preview#
+
+[.col2.fragment]
+.Motivation & Goals
+--
+* _„modeling data as data“_
+* reduce boilerplate & +
+  error-proneness of +
+  plain "data carriers"
+--
+
+[.col2.fragment]
+.Non-Goals
+--
+* mutable classes 
+* JavaBean conventions
+* properties
+* metaprogramming 
+--
+
+=== Records at a glance [preview]#Preview#
+
+[.col2]
+.Typical „data holder“ class
+--
+[source.xx-small,java]
+----
+final class BalanceClass {
+  final BigDecimal amount;
+  final Currency currency;
+
+  public BalanceClass(BigDecimal amount, Currency currency) {
+    this.amount = amount;
+    this.currency = currency;
+  }
+
+  public BigDecimal amount() { return amount; }
+  public Currency currency() { return currency;  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if ((o == null) || (getClass() != o.getClass())) return false;
+    BalanceClass that = (BalanceClass) o;
+    return (amount.compareTo(that.amount) == 0) &&
+            currency.equals(that.currency);
+  }
+
+  @Override
+  public int hashCode() { return Objects.hash(amount, currency);  }
+
+  @Override
+  public String toString() {
+    return "Balance[amount=" + amount + ", currency=" + currency +']';
+  }
+}
+----
+--
+
+[.col2]
+.Record data type
+--
+[source,java.xx-small]
+----
+  record BalanceRecord(
+    BigDecimal amount, 
+    Currency currency
+  ) {}
+----
+
+_Immutable_ data classes that require only _field_ type & names.
+
+//Provides Constructor, `equals()`, `hashCode()` & Getter
+--
+
+
+=== Records: usage [preview]#Preview#
+
+[source,java]
+----
+var  amnt = new BigDecimal(400);
+var  curr = Currency.getInstance("USD");
+record BalanceRecord(BigDecimal amount, Currency currency) {} 
+
+var bal = new BalanceRecord(amnt, curr);                 <1>
+var bal2 = new BalanceRecord(amnt, curr);
+
+assertEquals(amnt, bal.amount());                        <2>
+
+assertEquals(bal, bal2);                                 <3>
+assertEquals(bal.hashCode(), bal2.hashCode());  
+assertEquals(bal.toString(), "BalanceRecord[amount=400, currency=USD]");
+----
+<1> Default generated constructors
+<2> Getter methods _not_ adhering JavaBeans convention
+<3> Provides `equals()`, `hashCode()` and `toString()` implementations
+
+
+=== Records: Advanced usage [preview]#Preview#
+
+[source,java]
+----
+public record BalanceRecord(BigDecimal amount, Currency currency) {
+
+    public BalanceRecord {                                 // Compact c'tor
+        Objects.requireNonNull(amount);
+        Objects.requireNonNull(currency);
+    }
+
+    public BalanceRecord(BigDecimal amount) {              // Extra c'tor
+        this(amount, Currency.getInstance("USD"));
+    }
+
+    static Currency EUR = Currency.getInstance("EUR");    // static fields
+
+    public static BalanceRecord eur(String cash) {        // static methods
+        return new BalanceRecord(new BigDecimal(cash), EUR);
+    }
+}
+var oneDollar = new BalanceRecord(BigDecimal.ONE);
+var eur400 = BalanceRecord.eur("400");
+----
+

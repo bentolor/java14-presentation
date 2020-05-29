@@ -1,0 +1,23 @@
+[.lightbg,background-video="videos/machine.mp4",background-video-loop="true",background-opacity="0.7"]
+== Java Virtual Machine
+
+
+=== Helpful Nullpointer exceptions
+
+Enabled with JRE param `-XX:+ShowCodeDetailsInExceptionMessages`
+
+[source,java]
+----
+public static void main(String[] args) {
+    var p = new Person("Peter", null);
+    var e = p.email().toLowerCase();
+}
+----
+
+[source,text,subs="none"]
+----
+Exception in thread "main" java.lang.NullPointerException: Cannot invoke <mark>"String.toLowerCase()"</mark> because the return value of <mark>"MyClass$Person.email()"</mark> is null
+  at MyClass.main(ThrowNullPointer.java:6)
+----
+
+If you want names for _variables_ i.e. in lambdas, compile with `-g:vars`

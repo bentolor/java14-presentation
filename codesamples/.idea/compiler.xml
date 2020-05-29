@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="Java_JDK_9-13_Examples" target="12" />
+      <module name="Java_JDK_9-13_Examples.main" target="12" />
+      <module name="Java_JDK_9-13_Examples.test" target="12" />
+      <module name="Java_JDK_9-14_Examples" target="14" />
+      <module name="Java_JDK_9-14_Examples.main" target="14" />
+      <module name="Java_JDK_9-14_Examples.test" target="14" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_STRING" value="--enable-preview -Xlint:preview" />
+  </component>
+</project>

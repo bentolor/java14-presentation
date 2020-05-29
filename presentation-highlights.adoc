@@ -1,0 +1,36 @@
+[.lightbg,background-video="videos/coffee-beans.mp4",background-video-loop="true",background-opacity="0.7"]
+== Java 14 in a nutshell
+
+[.x-small.col2]
+****
+.JVM
+* **JFR Event Streaming**
+* helpful NullPointerExceptions
+* **Platform:** deprecate Solaris & SPARC
+* **GC:** ZGC for macOS/Win, remove CMS +
+  NUMA-Aware G1
+
+.Tools
+* Packaging Tool (Incubator)
+****
+
+[.x-small.col2.bgap]
+****
+.Language
+* Switch Expressions [stable]#stable#
+* Pattern Matching for instanceof [preview]#preview#
+* Records [preview]#preview#
+* Text Blocks [preview]#preview#
+* Foreign-Memory Access API 
+
+.Library
+* Non-Volatile Mapped Byte Buffers
+* Remove the Pack200 Tools and API +
+{nbsp}
+****
+
+[.refs]
+--
+* based on the https://javaalmanac.io/[Java Almanac by Marc R. Hoffmann and Cay S. Horstmann]
+* official https://www.oracle.com/technetwork/java/javase/14-relnote-issues-5809570.html[Oracle JDK 14 release notes]
+--
