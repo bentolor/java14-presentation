@@ -347,7 +347,7 @@ var eur400 = BalanceRecord.eur("400");</code></pre></div></div></div></section><
 // - https://github.com/hakimel/reveal.js#dependencies
 Reveal.initialize({
   // Display presentation control arrows
-  controls: false,
+  controls: true,
   // Help the user learn the controls by providing hints, for example by
   // bouncing the down arrow when they first encounter a vertical slide
   controlsTutorial: true,
@@ -384,10 +384,10 @@ Reveal.initialize({
   // Randomizes the order of slides each time the presentation loads
   shuffle: false,
   // Turns fragments on and off globally
-  fragments: true,
+  fragments: false,
   // Flags whether to include the current fragment in the URL,
   // so that reloading brings you to the same fragment position
-  fragmentInURL: true,
+  fragmentInURL: false,
   // Flags if the presentation is running in an embedded mode,
   // i.e. contained within a limited portion of the screen
   embedded: false,
@@ -410,7 +410,7 @@ Reveal.initialize({
   // Number of milliseconds between automatically proceeding to the
   // next slide, disabled when set to 0, this value can be overwritten
   // by using a data-autoslide attribute on your slides
-  autoSlide: 0,
+  autoSlide: 7000,
   // Stop auto-sliding after user input
   autoSlideStoppable: true,
   // Use this method for navigation when auto-sliding
@@ -431,7 +431,7 @@ Reveal.initialize({
   // speaker notes window
   minimumTimePerSlide: 0,
   // Enable slide navigation via mouse wheel
-  mouseWheel: false,
+  mouseWheel: true,
   // Hide cursor if inactive
   hideInactiveCursor: true,
   // Time before the cursor is hidden (in ms)
